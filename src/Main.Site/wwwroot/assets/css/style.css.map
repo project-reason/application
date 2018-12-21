@@ -1,0 +1,9 @@
+{
+	"version": 3,
+	"file": "style.css",
+	"sources": [
+		"../../../ClientApp/Sass/Style.scss"
+	],
+	"names": [],
+	"mappings": ""
+}

@@ -1,0 +1,27 @@
+﻿<nav class="orange">
+    <div class="nav-wrapper container">
+        <a asp-page="/Index" class="brand-logo">Logo</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <li><a is-active-route asp-page="/Index">Home</a></li>
+            <li><a is-active-route asp-page="/Contact">Contact</a></li>
+            <li><a is-active-route asp-page="/About">About</a></li>
+            <li><a is-active-route asp-page="/Person/Index">Person</a></li>
+        </ul>
+    </div>
+</nav>
+<ul class="sidenav" id="mobile-demo">
+    <li><a is-active-route asp-page="/Index">Home</a></li>
+    <li><a is-active-route asp-page="/Contact">Contact</a></li>
+    <li><a is-active-route asp-page="/About">About</a></li>
+    <li>
+        <a href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Person</a>
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#mobile-demo">
+            <ul>
+                <li><a asp-page="/Person/Index">- Register</a></li>
+                <li><a asp-page="/Person/Index">- Query</a></li>
+                <li><a asp-page="/Person/Index">- Report</a></li>
+            </ul>
+        </div>
+    </li>
+</ul>

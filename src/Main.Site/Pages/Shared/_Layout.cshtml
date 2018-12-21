@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - App</title>
+    <partial name="_StylesPartial" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header>
+        <partial name="_MainNavbarPartial" />
+        @await RenderSectionAsync("Submenu", required: false)
+    </header>
+    <div class="container">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <partial name="_FooterPartial" />
+    <partial name="_ScriptsPartial" />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
