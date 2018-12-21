@@ -38,7 +38,7 @@ Task("Restore-Npm-Packages")
         
         var _NpmInstallSettings = new NpmInstallSettings() {
             LogLevel = NpmLogLevel.Info,
-            WorkingDirectory = "./src/Main.Site/",
+            WorkingDirectory = "./src/",
             Production = true
         };
 
