@@ -2,12 +2,15 @@
 #addin nuget:?package=SharpZipLib
 #addin nuget:?package=Cake.Compression
 #addin nuget:?package=Cake.Npm
+#addin nuget:?package=Cake.Kudu.Client&version=0.5.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
+
+Information($"Running target {target} in configuration {configuration}");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -30,7 +33,7 @@ Task("Clean")
 Task("Restore-NuGet-Packages")
     .IsDependentOn("Clean")
     .Does(() => {
-     DotNetCoreRestore("./");
+     DotNetCoreRestore("./src/");
 });
 
 Task("Restore-Npm-Packages")
@@ -38,7 +41,7 @@ Task("Restore-Npm-Packages")
         
         var _NpmInstallSettings = new NpmInstallSettings() {
             LogLevel = NpmLogLevel.Info,
-            WorkingDirectory = "./src/",
+            WorkingDirectory = "./src/Main.Site/",
             Production = true
         };
 
@@ -88,7 +91,7 @@ Task("Running-Grunt-Tasks")
     .IsDependentOn("Running-Grunt-Tasks")
     .Does(() =>
     {
-        DotNetCoreBuild("./Main.sln",
+        DotNetCoreBuild("./src/Main.sln",
             new DotNetCoreBuildSettings()
             {
                 Configuration = configuration,
@@ -127,6 +130,24 @@ Task("Execute-Publish-Web")
                 OutputDirectory = distDirectory,
                 ArgumentCustomization = args => args.Append("--no-restore"),
             });
+    });
+
+Task("DeployToAzure")
+    .Description("Deploy to Azure ")
+    .Does(() =>
+    {
+        // https://hackernoon.com/run-from-zip-with-cake-kudu-client-5c063cd72b37
+        string baseUri  = EnvironmentVariable("KUDU_CLIENT_BASEURI"),
+               userName = EnvironmentVariable("KUDU_CLIENT_USERNAME"),
+               password = EnvironmentVariable("KUDU_CLIENT_PASSWORD");
+        Information($"Kudu deploy to {baseUri} {userName} {password}");
+        IKuduClient kuduClient = KuduClient(
+            baseUri,
+            userName,
+            password);
+        var skipPostDeploymentValidation = true; // .NET core apps don't report their version number
+        FilePath deployFilePath = kuduClient.ZipRunFromDirectory(distDirectory, skipPostDeploymentValidation);
+        Information("Deployed to {0}", deployFilePath);
     });
 
 
